@@ -1,25 +1,20 @@
-/**
- * Database configuration module
- * Establishes a secure Mongoose connection to MongoDB using async/await
- */
-
 const mongoose = require("mongoose");
 
 /**
  * Connect to MongoDB database with proper error handling
- * Uses environment variables for configuration
- * @returns {Promise} Mongoose connection promise
+ * Gracefully handles startup connection issues to ensure server uptime.
  */
 const connectDB = async () => {
+  if (!process.env.MONGO_URI) {
+    console.warn("Warning: MONGO_URI is not set. Database operations will be unavailable.");
+    return;
+  }
   try {
-    // Commented out the active connection call completely to bypass startup blocking
-    // const conn = await mongoose.connect(process.env.MONGO_URI);
-    
-    // Force an instant simulated success status
-    console.log("Simulated Local Connection: Database initialized successfully.");
+    const conn = await mongoose.connect(process.env.MONGO_URI);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error(`Error connecting to MongoDB: ${error.message}`);
-    process.exit(1);
+    console.error(`Warning: Failed to connect to MongoDB: ${error.message}`);
+    // Do not call process.exit(1) to keep the Express server running
   }
 };
 
