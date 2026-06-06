@@ -1,3 +1,6 @@
+const dns = require("dns");
+dns.setServers(["1.1.1.1", "8.8.8.8"]);
+
 /**
  * Main server entry point for Campus Interview Tracking System
  * Wires up Express middleware, routes, and error handling
