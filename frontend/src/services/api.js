@@ -1,7 +1,11 @@
 import axios from "axios";
 
-// Dynamically check for environment API URL or default to local port
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+// Resolve the API URL dynamically at runtime
+const API_URL = import.meta.env.VITE_API_URL || 
+  (typeof window !== "undefined" && 
+   (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.hostname === "::1")
+     ? "http://localhost:5000/api"
+     : "/api");
 
 // Create Axios instance pointing to the backend API
 const api = axios.create({
